@@ -6,7 +6,7 @@ const generateMockUsers = (): User[] => {
   const names = ['ゆうと', 'ニックネーム太郎1文字', 'わんこ好き', 'はるかぜ', 'あおい', 'ポンたろう', 'まさやん', 'なっこ', 'ひなたぽん', 'ひまわりさん'];
   const domains = ['@example.com', '@example.net', '@gmail.com', '@yahoo.co.jp', '@outlook.com', '@example.org', '@example.jp'];
   const roles = ['管理者', '会員'];
-  const statuses = ['active', 'inactive'];
+  const statuses = ['active', 'inactive'] as const;
   const genders = ['男性', '女性', 'その他'];
   const prefectures = ['東京都', '大阪府', '愛知県', '神奈川県', '埼玉県', '千葉県', '兵庫県', '北海道', '福岡県', '静岡県'];
 
@@ -30,7 +30,7 @@ const generateMockUsers = (): User[] => {
       role: roles[roleIndex],
       status: statuses[statusIndex],
       registrationDate: `${year}年 ${month}月`,
-      lastLogin: Math.random() > 0.3 ? '2024年 01月 12日' : null,
+      lastLogin: Math.random() > 0.3 ? '2024年 01月 12日' : undefined,
       gender: genders[genderIndex],
       prefecture: prefectures[prefIndex]
     });

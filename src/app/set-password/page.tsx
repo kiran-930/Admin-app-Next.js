@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -9,7 +9,7 @@ import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
-import { ROUTES, TOAST_MESSAGES } from '@/lib/constants';
+import { ROUTES } from '@/lib/constants';
 import { validatePassword } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -24,7 +24,8 @@ type SetPasswordFormData = {
   password: string;
 };
 
-export default function SetPasswordPage() {
+// Component that uses useSearchParams - needs to be wrapped in Suspense
+function SetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { register: registerUser, hasRegisteredUsers, isLoading: authLoading } = useAuth();
@@ -179,5 +180,41 @@ export default function SetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading component for Suspense fallback
+function SetPasswordLoading() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header with Logo */}
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <Logo size="md" />
+      </header>
+
+      {/* Main Content - Loading */}
+      <div className="flex flex-col justify-center items-center px-6 min-h-[calc(100vh-80px)] bg-gray-50">
+        <div className="w-full max-w-md text-center">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded mb-2"></div>
+            <div className="h-4 bg-gray-200 rounded mb-8"></div>
+            <div className="space-y-4">
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+              <div className="h-10 bg-gray-200 rounded"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Main component that wraps SetPasswordForm with Suspense
+export default function SetPasswordPage() {
+  return (
+    <Suspense fallback={<SetPasswordLoading />}>
+      <SetPasswordForm />
+    </Suspense>
   );
 }
